@@ -18,7 +18,7 @@ logger.info 'Telegram Bot: Connecting to telegram...'
 Telegram::Bot::Client.run(token, logger: logger) do |bot|
   bot.logger.info('Bot has been started')
   bot.listen do |message|
-    if CrmService.instance.telegram_user_exist?(message.chat.id)
+    if !CrmService.instance.telegram_user_exist?(message.chat.id)
       text = "Hello, #{message.from.first_name}. You don't assign your YUFU CRM account with telegram. Your telegram ID is #{message.chat.id}. Please set up it in your CRM profile"
     else
       if %w(/start /hello).include? message.text

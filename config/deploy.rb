@@ -33,18 +33,14 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'pids', 'tmp/cache', 'vend
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
-
-after 'deploy:restart', 'daemonds:restart'
-
-namespace :daemons do
-  after :restart, :i18n_js_export do
+namespace :deploy do
+  after :restart, :restart_telegram_bot do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       within release_path do
         with rails_env: "#{fetch(:stage)}" do
-          execute :rake, 'daemons:telegram_bot:restart'
+          execute :rake, 'daemon:telegram_bot:restart'
         end
       end
     end
   end
-
 end
